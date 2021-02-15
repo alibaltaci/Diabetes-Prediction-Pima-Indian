@@ -7,6 +7,7 @@ def hist_for_nums(data, numeric_cols):
     :param numeric_cols:
     :return:
     """
+    import matplotlib.pyplot as plt
     col_counter = 0
     data = data.copy()
     for col in numeric_cols:
@@ -16,6 +17,29 @@ def hist_for_nums(data, numeric_cols):
         plt.show()
         col_counter += 1
     print(col_counter, "variables have been plotted")
+
+
+# Find correlations for numeric variables
+def find_correlation(dataframe, num_cols, corr_limit=0.60):
+    '''
+    :param dataframe:
+    :param num_cols:
+    :param corr_limit:
+    :return:
+    '''
+    high_correlations = []
+    low_correlations = []
+    for col in num_cols:
+        if col == "TARGET":
+            pass
+        else:
+            correlation = dataframe[[col, "TARGET"]].corr().loc[col, "TARGET"]
+            print(col, correlation)
+            if abs(correlation) > corr_limit:
+                high_correlations.append(col + ": " + str(correlation))
+            else:
+                low_correlations.append(col + ": " + str(correlation))
+    return low_correlations, high_correlations
 
 
 # Outlier Thresholds
