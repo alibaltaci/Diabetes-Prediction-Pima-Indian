@@ -23,7 +23,6 @@ def num_catcher(dataframe, number):
     """
 
     :param dataframe:
-    :param cols:
     :param number:
     :return:
     """
@@ -37,26 +36,21 @@ def num_catcher(dataframe, number):
 
 
 # Find correlations for numeric variables
-def find_correlation(dataframe, num_cols, corr_limit=0.60):
-    """
-    :param dataframe:
-    :param num_cols:
-    :param corr_limit:
-    :return:
-    """
-    high_correlations = []
-    low_correlations = []
-    for col in num_cols:
-        if col == "TARGET":
+def find_correlation(dataframe, corr_limit=0.60):
+    high_correlation = []
+    low_correlation = []
+    for col in dataframe.columns:
+        if col == "Outcome":
             pass
         else:
-            correlation = dataframe[[col, "TARGET"]].corr().loc[col, "TARGET"]
+            correlation = dataframe[[col, "Outcome"]].corr().loc[col, "Outcome"]
             print(col, correlation)
             if abs(correlation) > corr_limit:
-                high_correlations.append(col + ": " + str(correlation))
+                high_correlation.append(col + ": " + str(correlation))
             else:
-                low_correlations.append(col + ": " + str(correlation))
-    return low_correlations, high_correlations
+                low_correlation.append(col + ": " + str(correlation))
+
+    return low_correlation, high_correlation
 
 
 # Outlier Thresholds
