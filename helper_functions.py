@@ -19,14 +19,31 @@ def hist_for_nums(data, numeric_cols):
     print(col_counter, "variables have been plotted")
 
 
+def num_catcher(dataframe, number):
+    """
+
+    :param dataframe:
+    :param cols:
+    :param number:
+    :return:
+    """
+
+    for i in dataframe.columns:
+        zero = list(dataframe[i]).count(number)
+        if zero == 0:
+            pass
+        else:
+            print("Variable ", i, ":", zero)
+
+
 # Find correlations for numeric variables
 def find_correlation(dataframe, num_cols, corr_limit=0.60):
-    '''
+    """
     :param dataframe:
     :param num_cols:
     :param corr_limit:
     :return:
-    '''
+    """
     high_correlations = []
     low_correlations = []
     for col in num_cols:
