@@ -58,5 +58,16 @@ plt.show()
 for col in df.columns:
     print(df.groupby("Outcome").agg({col: ["mean", "median", "std"]}))
 
+# Correlation between variables
+hf.find_correlation(df)
+
+# Correlation Matrix
+corr=df.corr()
+sns.set(font_scale=1)
+plt.figure(figsize=(14, 10))
+sns.heatmap(corr, vmax=.8, linewidths=0.02,square=True,annot=True,cmap='YlGnBu',linecolor="black")
+plt.title("Correlation between variables")
+plt.show()
+
 
 
