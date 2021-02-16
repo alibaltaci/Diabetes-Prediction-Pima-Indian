@@ -203,4 +203,5 @@ hf.has_outliers(df,num_cols)
 
 
 # Export the dataset for later use by modeling
+df.to_csv(r"C:\Users\TOSHIBA\Desktop\Diabetes Pima Indian\DiabetesDatasetForModeling.csv", index=False)
 
