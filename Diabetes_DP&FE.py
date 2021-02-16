@@ -21,6 +21,8 @@ df_backup = pd.read_csv(r"C:\Users\TOSHIBA\Desktop\Diabetes Pima Indian\diabetes
 df = df_backup.copy()
 df.head()
 
+
+
 # OUTLIER ANALYSIS
 
 hf.has_outliers(df,df.columns)
@@ -42,6 +44,7 @@ for col in df.columns:
     hf.replace_with_thresholds_with_lambda(df,col)
 
 hf.has_outliers(df,df.columns)
+
 
 
 # MISSING VALUES ANALYSIS
@@ -84,6 +87,13 @@ hf.num_catcher(df,0)
 # Variable  Outcome : 500
 
 # these variables can have values of 0.
+
+# filling missing values with median
+for col in cols_na:
+    df[col] = df[col].fillna(df.groupby("Outcome")[col].transform("median"))
+
+# Checking missing values again
+df.isnull().sum()
 
 
 # FEATURE ENGINEERING
@@ -128,7 +138,7 @@ plt.show()
 
 # INSULIN #
 df.loc[(df["Insulin"] >= 16) & (df["Insulin"] <= 166), "NEW_InsulinDesc"] = 1
-df.loc[(df["Insulin"].isnull()), "NEW_InsulinDesc"] = 0
+df.loc[(df["NEW_InsulinDesc"].isnull()), "NEW_InsulinDesc"] = 0
 
 # Value counts
 df[["NEW_InsulinDesc"]].value_counts()
@@ -149,3 +159,19 @@ df[["NEW_HyperBloodPressure"]].value_counts()
 sns.countplot(x="NEW_InsulinDesc", hue="Outcome", data=df)
 plt.show()
 
+df.head()
+
+# ONE HOT ENCODING
+
+# Catch numerical variables
+cat_cols = [col for col in df.columns if df[col].dtypes == 'O' and len(df[col].unique()) <= 10]
+
+len(cat_cols)
+
+df, new_cols_ohe = hf.one_hot_encoder(df, cat_cols)
+
+df.head()
+
+len(new_cols_ohe)
+
+df.info()
