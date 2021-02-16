@@ -191,3 +191,16 @@ df[num_cols] = RobustScaler().fit_transform(df[num_cols])
 df[num_cols].describe().T
 len(num_cols)
 
+
+
+# Final Checks
+
+df.head()
+df.isnull().sum()
+df.info
+hf.has_outliers(df,num_cols)
+
+
+
+# Export the dataset for later use by modeling
+
