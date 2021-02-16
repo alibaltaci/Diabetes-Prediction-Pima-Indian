@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import seaborn as sns
+from sklearn.preprocessing import RobustScaler
 import helper_functions as hf
 
 warnings.simplefilter(action="ignore")
@@ -175,3 +176,18 @@ df.head()
 len(new_cols_ohe)
 
 df.info()
+
+
+
+# STANDARDIZATION
+
+# Catch numerical variables
+num_cols = [col for col in df.columns if df[col].dtypes != "O" and col not in ["Outcome"]]
+len(num_cols)
+
+# Robust Scaler
+df[num_cols] = RobustScaler().fit_transform(df[num_cols])
+
+df[num_cols].describe().T
+len(num_cols)
+
