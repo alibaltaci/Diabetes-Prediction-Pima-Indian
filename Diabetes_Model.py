@@ -26,6 +26,7 @@ warnings.simplefilter(action="ignore")
 pd.pandas.set_option('display.max_columns', None)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
+
 # Load the dataset
 df = pd.read_csv(r"C:\Users\TOSHIBA\Desktop\Diabetes Pima Indian\DiabetesDatasetForModeling.csv")
 df.head()
@@ -42,19 +43,49 @@ models = [("LR", LogisticRegression()),
           ("LightGBM", LGBMClassifier())]
 
 
-
+# Define dependent and independent variables
 X = df.drop("Outcome",axis=1)
 y = df["Outcome"]
 
+# Train-Test Split
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
 
+
+# Holdout Method & Cross Val Score
 for name,model in models:
-    mod = model.fit(X_train,y_train) #trainleri modele fit etmek
-    y_pred = mod.predict(X_test) # tahmin
-    acc = accuracy_score(y_test, y_pred) #rmse hesabı
+    mod = model.fit(X_train,y_train)
+    y_pred = mod.predict(X_test)
+    acc = accuracy_score(y_test, y_pred) #rmse
     cvscore = cross_val_score(model, X,y, cv = 10).mean()
     print("Holdout Method:",end=" ")
-    print(name,acc) #yazdırılacak kısım
+    print(name,acc)
     print("Cross Val Score",end=" ")
     print(name,cvscore)
     print("------------------------------------")
+
+
+# Random Forest Model Tuning #
+
+rf_params = {"n_estimators": [100, 200, 500, 1000],
+             "max_features": [3, 5, 7],
+             "min_samples_split": [2, 5, 10, 30],
+             "max_depth": [3, 5, 8, None]}
+
+rf_model = RandomForestClassifier(random_state=42)
+
+gs_cv = GridSearchCV(rf_model, rf_params, cv=10, n_jobs=-1, verbose=2).fit(X, y)
+# [Parallel(n_jobs=-1)]: Done 1920 out of 1920 | elapsed: 16.8min finished
+
+gs_cv.best_params_  # {'max_depth': 8,
+                    # 'max_features': 7,
+                    # 'min_samples_split': 5,
+                    # 'n_estimators': 500}
+
+# Final Model
+rf_tuned = RandomForestClassifier(**gs_cv.best_params_).fit(X,y)
+
+cross_val_score(rf_tuned, X, y, cv=10).mean()  # 0.89
+
+# Feature Importances
+feature_imp_rf = pd.Series(rf_tuned.feature_importances_, index=X.columns).sort_values(ascending=False)
+
