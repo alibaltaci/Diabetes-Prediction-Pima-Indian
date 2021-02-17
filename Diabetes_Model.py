@@ -88,7 +88,7 @@ rf_tuned = RandomForestClassifier(**rf_gscv.best_params_).fit(X,y)
 cross_val_score(rf_tuned, X, y, cv=10).mean()  # 0.89
 
 # Feature Importances
-hf.plot_feature_importances(feature_imp_rf, X)
+hf.plot_feature_importances(rf_tuned, X)
 
 
 # LightGBM  Model Tuning #
