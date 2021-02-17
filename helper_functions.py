@@ -124,6 +124,18 @@ def one_hot_encoder(dataframe, categorical_cols, nan_as_category=True):
     return dataframe, new_columns
 
 
+# Plot Feature Importances
+def plot_feature_importances(feature_importances):
+    """
+
+    :param feature_importances:
+    :return:
+    """
+    sns.barplot(x=feature_importances, y=feature_importances.index)
+    plt.xlabel("Feature importance scores")
+    plt.ylabel("Features")
+    plt.title("Feature Importances")
+    plt.show()
 
 
 
