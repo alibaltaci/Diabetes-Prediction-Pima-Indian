@@ -88,9 +88,7 @@ rf_tuned = RandomForestClassifier(**rf_gscv.best_params_).fit(X,y)
 cross_val_score(rf_tuned, X, y, cv=10).mean()  # 0.89
 
 # Feature Importances
-feature_imp_rf = pd.Series(rf_tuned.feature_importances_, index=X.columns).sort_values(ascending=False)
-
-hf.plot_feature_importances(feature_imp_rf)
+hf.plot_feature_importances(feature_imp_rf, X)
 
 
 # LightGBM  Model Tuning #
@@ -112,9 +110,24 @@ lgbm_tuned = LGBMClassifier(**rf_gscv.best_params_).fit(X, y)
 cross_val_score(lgbm_tuned, X, y, cv=10).mean()   # 0.8997
 
 # Feature Importances
-feature_imp_lgbm = pd.Series(lgbm_tuned.feature_importances_, index=X.columns).sort_values(ascending=False)
-
-hf.plot_feature_importances(feature_imp_lgbm)
+hf.plot_feature_importances(lgbm_tuned, X)
 
 
+# XGB Model Tuning #
 
+xgb_params = {"learning_rate": [0.01, 0.03, 0.05, 0.1, 0.5],
+             "max_depth": [3, 5, 8],
+             "n_estimators": [200, 500, 1000]}
+
+xgb_model = XGBClassifier(random_state=42)
+
+xcb_gscv = GridSearchCV(xgb_model, xgb_params, cv=10, n_jobs=-1, verbose=2).fit(X, y)
+# [Parallel(n_jobs=-1)]: Done 450 out of 450 | elapsed:  2.0min finished
+
+# Final Model
+xgb_tuned = XGBClassifier(**xcb_gscv.best_params_).fit(X, y)
+
+cross_val_score(xgb_tuned, X, y, cv=10).mean()   # 0.8972
+
+# Feature Importances
+hf.plot_feature_importances(xgb_tuned, X)
