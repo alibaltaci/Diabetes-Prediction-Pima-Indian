@@ -124,22 +124,19 @@ def one_hot_encoder(dataframe, categorical_cols, nan_as_category=True):
     return dataframe, new_columns
 
 
-# Plot Feature Importances
-def plot_feature_importances(feature_importances):
+# Plot Feature Importance
+def plot_feature_importances(tuned_model,X):
     """
 
-    :param feature_importances:
+    :param tuned_model:
     :return:
     """
-    sns.barplot(x=feature_importances, y=feature_importances.index)
-    plt.xlabel("Feature importance scores")
-    plt.ylabel("Features")
+    feature_imp = pd.Series(tuned_model.feature_importances_, index=X.columns).sort_values(ascending=False)
+    sns.barplot(x=feature_imp, y=feature_imp.index)
+    plt.xlabel("Significance Score Of Variables")
+    plt.ylabel("Variables")
     plt.title("Feature Importances")
     plt.show()
-
-
-
-
 
 
 
